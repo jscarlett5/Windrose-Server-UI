@@ -1,17 +1,17 @@
-# Use Node for building the app
-FROM node:20-slim
+FROM node:20
 
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package files
 COPY package*.json ./
-RUN npm install
 
-# Copy the rest of your code
+# Clean install to ensure no architecture mismatches
+RUN npm ci
+
+# Copy the rest of the code
 COPY . .
 
-# Expose the default Vite port
-EXPOSE 5173
+EXPOSE 3000
 
-# Run the dev server, allowing external connections
-CMD ["npm", "run", "dev", "--", "--host"]
+# Use --host to ensure Vite broadcasts correctly
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
